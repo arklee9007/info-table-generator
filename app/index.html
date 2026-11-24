@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="app-version" content="0.0.0-dev">
+<meta name="theme-color" content="#0f766e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="信息表生成器">
+<title>信息表生成器</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="styles.css">
+<script src="vendor/fflate-0.8.3.min.js"></script>
+<script src="vendor/xlsx-0.20.3.full.min.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">信息表生成器</div>
+    <div class="version" id="versionLabel">v—</div>
+  </div>
+  <div class="update-banner" id="updateBanner" hidden>
+    <span id="updateText"></span>
+    <button id="updateNowBtn" class="btn btn-small">更新</button>
+    <button id="updateLaterBtn" class="btn btn-small btn-ghost">以后再说</button>
+  </div>
+</header>
+
+<nav class="view-nav" aria-label="界面切换">
+  <div class="view-nav-inner">
+    <button class="tab active" id="navGenerate" data-testid="nav-generate" aria-selected="true">直接生成</button>
+    <button class="tab" id="navSettings" data-testid="nav-settings" aria-selected="false">设置模板</button>
+    <span class="view-hint" id="viewHint">选好模板，填表或导入文件，直接生成信息表。</span>
+  </div>
+</nav>
+
+<main>
+<div id="viewGenerate" data-testid="view-generate">
+  <section class="card" id="stepTemplate">
+    <h2>1 · 选模板</h2>
+    <div class="row">
+      <select id="templateSelect" aria-label="模板"></select>
+      <button id="gotoSettingsBtn" class="btn btn-ghost">去设置模板（新建 / 编辑 / 导入）</button>
+    </div>
+    <p class="hint" id="templateInfo"></p>
+    <p class="hint">要加品类、改字段、换规格维：去「设置模板」里改好、选好，再回来生成；改好的模板保存在本机，刷新还在。</p>
+  </section>
+
+  <section class="card" id="stepInput">
+    <h2>2 · 输入商品文字或文件</h2>
+    <div class="tabs" role="tablist">
+      <button class="tab active" id="tabPaste" role="tab" aria-selected="true">粘贴文字</button>
+      <button class="tab" id="tabFile" role="tab" aria-selected="false">导入文件</button>
+    </div>
+    <div id="panePaste" role="tabpanel">
+      <textarea id="pasteArea" rows="9" placeholder="粘贴字段块，例如：&#10;款名：重磅素色短袖&#10;价格：129&#10;运费方式：套模板&#10;分类：短袖&#10;颜色：本白、克莱因蓝&#10;尺码：M、L&#10;图案：素色&#10;库存：100"></textarea>
+      <div class="row">
+        <button id="parsePasteBtn" class="btn btn-primary">解析文字</button>
+        <button id="fillSampleBtn" class="btn btn-ghost">填入示例</button>
+        <button id="clearPasteBtn" class="btn btn-ghost">清空</button>
+      </div>
+    </div>
+    <div id="paneFile" role="tabpanel" hidden>
+      <p class="hint">支持 txt、md、csv、xlsx、xls、docx、json。txt 认 UTF-8 / GBK / UTF-16 编码；表格首行须为字段名，或直接用信息表格式；json 是记录数组（字段词或字段 key 作键）。</p>
+      <label class="dropzone" id="fileDropzone">
+        <input type="file" id="fileInput" accept=".txt,.md,.markdown,.csv,.xlsx,.xls,.docx,.json" hidden>
+        <span>点这里选择文件，或把文件拖进来</span>
+      </label>
+      <div class="row" id="sheetRow" hidden>
+        <label for="sheetSelect">这个表格有多张表，选一张导入：</label>
+        <select id="sheetSelect" data-testid="sheet-select" aria-label="选择表格"></select>
+      </div>
+      <div class="row">
+        <button id="parseFileBtn" class="btn btn-primary" disabled>解析文件</button>
+        <span class="hint" id="fileNameLabel"></span>
+      </div>
+    </div>
+    <div class="notice" id="parseNotice" hidden></div>
+  </section>
+
+  <section class="card" id="stepStyles">
+    <div class="section-head">
+      <h2>3 · 核对、配图、出包</h2>
+      <div class="row">
+        <button id="downloadAllBtn" class="btn btn-ghost" disabled>全部出包</button>
+        <button id="clearAllBtn" class="btn btn-ghost" disabled>清空全部</button>
+      </div>
+    </div>
+    <p class="hint" id="emptyHint">解析后款式会出现在这里。每款核对字段、配好图片，点「生成素材包」下载 zip，拿去商城后台导入。</p>
+    <div id="styleList"></div>
+  </section>
+
+  <footer class="foot">
+    <p>全离线工作：解析与出包都在本机完成，不上传任何内容。有网时只检查新版本，发现新版会弹窗提示，由你点确认才更新，绝不自动更新。</p>
+    <p>规格说明：字段块认字段词；库存统一数写数字，单个组合覆盖写「轴1/轴2/轴3=数字」（轴名看当前模板，如美妆是“色号/规格/质地=数字”）。一段话文案请先用任意 AI 聊天工具（如 ChatGPT、豆包、DeepSeek）按字段块格式拆好、核对无误再粘进来。</p>
+  </footer>
+</div>
+
+<div id="viewSettings" data-testid="view-settings" hidden>
+  <section class="card" id="stepSettings">
+    <h2>设置模板</h2>
+    <p class="hint">先在这里把模板设置好、选好，再去「直接生成」开始出包。改动只改草稿，点「保存模板」才生效；内置模板（服装/美妆/鞋/食品/数码/家居/母婴）改完自动存为副本，原模板不动。</p>
+    <div class="row">
+      <select id="settingsTemplateSelect" aria-label="要设置的模板" data-testid="settings-template-select"></select>
+      <label class="btn btn-ghost file-btn">导入模板文件
+        <input type="file" id="templateFileInput" accept=".json,application/json" hidden>
+      </label>
+      <button id="exportTemplateBtn" class="btn btn-ghost">导出当前模板</button>
+      <button id="duplicateTemplateBtn" class="btn btn-ghost">复制当前模板</button>
+      <button id="deleteTemplateBtn" class="btn btn-ghost">删除当前模板</button>
+      <button id="useTemplateBtn" class="btn btn-primary" data-testid="use-template-btn">设为生成模板并开始生成</button>
+    </div>
+    <p class="hint" id="settingsTemplateInfo"></p>
+    <details class="tpl-manage" open>
+      <summary>新建品类</summary>
+      <p class="hint">新建品类：填个名、填 1-3 个规格轴的名字（如食品填“口味、规格、包装”），一点就生成新模板、保存在本机，马上能用。0 个轴就是无规格单品。</p>
+      <div class="row">
+        <input id="newCategoryName" type="text" placeholder="新品类名，如：食品" aria-label="新品类名">
+        <input id="newAxis1" type="text" placeholder="规格轴 1，如：口味" aria-label="规格轴 1">
+        <input id="newAxis2" type="text" placeholder="规格轴 2，如：规格" aria-label="规格轴 2">
+        <input id="newAxis3" type="text" placeholder="规格轴 3，如：包装" aria-label="规格轴 3">
+        <button id="createCategoryBtn" class="btn btn-primary">生成新品类模板</button>
+      </div>
+      <p class="hint">导入的模板保存在本机浏览器里，刷新、重开都不用重新导入。内置的七个模板不能删除；自己导入的可以删。</p>
+    </details>
+    <div class="notice" id="settingsNotice" hidden></div>
+  </section>
+
+  <section class="card" id="editorCard" data-testid="editor-card">
+    <div class="section-head">
+      <h2>编辑模板：<span id="editorTitle">—</span></h2>
+      <div class="row">
+        <button id="edSaveBtn" class="btn btn-primary" data-testid="editor-save-btn">保存模板</button>
+        <button id="edResetBtn" class="btn btn-ghost">放弃修改</button>
+      </div>
+    </div>
+    <div class="notice" id="edErrors" data-testid="editor-errors"></div>
+    <h3 class="ed-h">基本信息</h3>
+    <div class="field-grid">
+      <div class="field"><label>模板名 *</label><input id="edName" type="text" data-testid="editor-name"></div>
+      <div class="field"><label>版本号（x.y.z）*</label><input id="edVersion" type="text" data-testid="editor-version"></div>
+      <div class="field full"><label>说明</label><input id="edDesc" type="text" data-testid="editor-desc"></div>
+    </div>
+    <h3 class="ed-h">规格轴（0–3 个，顺序即组合外层到内层）</h3>
+    <div id="edAxesBody" data-testid="editor-axes"></div>
+    <div class="row">
+      <select id="edAddAxisSelect" aria-label="加一个规格轴"></select>
+      <button id="edAddAxisBtn" class="btn btn-ghost">加为规格轴</button>
+    </div>
+    <h3 class="ed-h">字段（首名可改；锚字段与价格/运费/库存/款号不可删）</h3>
+    <div id="edFieldsBody" data-testid="editor-fields"></div>
+    <div class="row">
+      <input id="edNewKey" type="text" placeholder="新字段 key，如 brand" aria-label="新字段 key">
+      <input id="edNewName" type="text" placeholder="显示名，如 品牌" aria-label="新字段显示名">
+      <select id="edNewType" aria-label="新字段类型">
+        <option value="text">文本</option>
+        <option value="list">列表（多值，顿号分）</option>
+      </select>
+      <button id="edAddFieldBtn" class="btn btn-ghost">加字段</button>
+    </div>
+    <h3 class="ed-h">扩展字段（本品类才有的信息，如保质期、型号）</h3>
+    <div id="edExtraBody" data-testid="editor-extra"></div>
+    <div class="row">
+      <input id="edNewExtraKey" type="text" placeholder="key，如 warranty" aria-label="新扩展字段 key">
+      <input id="edNewExtraName" type="text" placeholder="显示名，如 保修期" aria-label="新扩展字段显示名">
+      <select id="edNewExtraType" aria-label="新扩展字段类型">
+        <option value="text">文本</option>
+        <option value="number">数字</option>
+        <option value="date">日期</option>
+        <option value="enum">枚举（限几个值）</option>
+        <option value="list">列表</option>
+      </select>
+      <input id="edNewExtraOptions" type="text" placeholder="枚举可选值，顿号分隔" aria-label="枚举可选值">
+      <button id="edAddExtraBtn" class="btn btn-ghost">加扩展字段</button>
+    </div>
+    <h3 class="ed-h">图片类别</h3>
+    <div id="edImgBody" data-testid="editor-images"></div>
+    <div class="row">
+      <input id="edNewImgKey" type="text" placeholder="key，如 cert" aria-label="新图片类别 key">
+      <input id="edNewImgLabel" type="text" placeholder="显示名，如 证书图" aria-label="新图片类别显示名">
+      <input id="edNewImgNaming" type="text" placeholder="命名规则，如 证书图{index}" aria-label="新图片类别命名规则">
+      <select id="edNewImgKeyFrom" aria-label="新图片类别对应字段"></select>
+      <button id="edAddImgBtn" class="btn btn-ghost">加图片类别</button>
+    </div>
+    <p class="hint">保存后模板立即进下拉、保存在本机；点「设为生成模板并开始生成」就切回直接生成界面用它出包。</p>
+  </section>
+</div>
+</main>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

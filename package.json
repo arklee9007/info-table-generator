@@ -1,0 +1,28 @@
+{
+  "name": "info-table-generator",
+  "version": "1.0.0",
+  "description": "文字转表格通用工具：信息表生成器（核心规则引擎）",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "NODE_PATH=$PWD/node_modules node test/run.mjs",
+    "build:pwa": "node tools/build-pwa.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "AGPL-3.0-only",
+  "dependencies": {
+    "fflate": "^0.8.3",
+    "jpeg-js": "^0.4.4",
+    "jszip": "^3.10.1",
+    "pngjs": "^7.0.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  },
+  "type": "module",
+  "devDependencies": {
+    "puppeteer-core": "^23.11.1"
+  }
+}

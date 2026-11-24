@@ -1,0 +1,218 @@
+{
+  "id": "baby",
+  "name": "母婴",
+  "version": "1.0.0",
+  "description": "母婴类商品信息表模板：尺码 × 适用年龄 × 款式三维规格，含材质与安全认证扩展字段。出包为标准信息表，暂不能直接导入现有商城后台解析器。",
+  "sheetName": "商品",
+  "headerRow1": [
+    "商品名",
+    "分类",
+    "价格",
+    "运费方式",
+    "描述",
+    "材质",
+    "安全认证",
+    "洗护说明"
+  ],
+  "specHeaderRow": 4,
+  "specHeaders": [
+    "尺码",
+    "适用年龄",
+    "款式",
+    "库存"
+  ],
+  "fields": [
+    {
+      "key": "name",
+      "maxLen": 120,
+      "names": [
+        "款名",
+        "商品名",
+        "品名"
+      ],
+      "required": true,
+      "styleAnchor": true
+    },
+    {
+      "key": "category",
+      "maxLen": 120,
+      "names": [
+        "分类",
+        "类别",
+        "品类"
+      ],
+      "required": true
+    },
+    {
+      "key": "price",
+      "names": [
+        "价格",
+        "售价",
+        "单价"
+      ],
+      "required": true,
+      "type": "price"
+    },
+    {
+      "key": "freight",
+      "map": {
+        "free": "包邮",
+        "template": "套模板",
+        "免邮": "包邮",
+        "免邮费": "包邮",
+        "包邮": "包邮",
+        "套模板": "套模板",
+        "模板": "套模板",
+        "运费模板": "套模板"
+      },
+      "names": [
+        "运费方式",
+        "运费"
+      ],
+      "required": true,
+      "type": "freight"
+    },
+    {
+      "key": "desc",
+      "maxLen": 5000,
+      "multiline": true,
+      "names": [
+        "描述",
+        "介绍",
+        "详情介绍",
+        "商品介绍"
+      ],
+      "required": false
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "sizes",
+      "names": [
+        "尺码",
+        "码数",
+        "码"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "ages",
+      "names": [
+        "适用年龄",
+        "年龄",
+        "月龄"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "styles",
+      "names": [
+        "款式",
+        "花型",
+        "图案"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "key": "stock",
+      "names": [
+        "库存",
+        "库存数"
+      ],
+      "required": true,
+      "type": "stock"
+    },
+    {
+      "key": "code",
+      "maxLen": 80,
+      "names": [
+        "款号",
+        "货号",
+        "款式编号"
+      ],
+      "required": false
+    }
+  ],
+  "specAxes": [
+    "sizes",
+    "ages",
+    "styles"
+  ],
+  "extraFields": [
+    {
+      "key": "material",
+      "names": [
+        "材质"
+      ],
+      "required": true,
+      "type": "text"
+    },
+    {
+      "key": "cert",
+      "names": [
+        "安全认证",
+        "认证"
+      ],
+      "required": false,
+      "type": "text"
+    },
+    {
+      "key": "wash",
+      "names": [
+        "洗护说明",
+        "洗护"
+      ],
+      "required": false,
+      "type": "text"
+    }
+  ],
+  "images": {
+    "accept": [
+      "png",
+      "jpeg",
+      "webp"
+    ],
+    "categories": [
+      {
+        "key": "main",
+        "label": "主图",
+        "naming": "主图{index}",
+        "required": true
+      },
+      {
+        "key": "detail",
+        "label": "详情图",
+        "naming": "详情图{index}",
+        "required": false
+      },
+      {
+        "key": "style",
+        "label": "款式图",
+        "naming": "款式图-{key}",
+        "required": false,
+        "keyFrom": "styles"
+      },
+      {
+        "key": "size",
+        "label": "尺码图",
+        "naming": "尺码图",
+        "required": false,
+        "maxCount": 1
+      }
+    ],
+    "maxImages": 12,
+    "maxPixels": 4000000
+  },
+  "limits": {
+    "maxCombos": 400,
+    "maxDescLen": 5000,
+    "maxPrice": 1000000,
+    "maxZipBytes": 2097152
+  },
+  "parserCompatible": false,
+  "targetParser": "none"
+}

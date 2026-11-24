@@ -1,0 +1,189 @@
+{
+  "description": "美妆商品信息表模板：色号 × 规格 × 质地三维规格，生成素材包可直接导入商城后台。",
+  "fields": [
+    {
+      "key": "name",
+      "maxLen": 120,
+      "names": [
+        "款名",
+        "商品名",
+        "品名"
+      ],
+      "required": true,
+      "styleAnchor": true
+    },
+    {
+      "key": "category",
+      "maxLen": 120,
+      "names": [
+        "分类",
+        "类别",
+        "品类"
+      ],
+      "required": true
+    },
+    {
+      "key": "price",
+      "names": [
+        "价格",
+        "售价",
+        "单价"
+      ],
+      "required": true,
+      "type": "price"
+    },
+    {
+      "key": "freight",
+      "map": {
+        "free": "包邮",
+        "template": "套模板",
+        "免邮": "包邮",
+        "免邮费": "包邮",
+        "包邮": "包邮",
+        "套模板": "套模板",
+        "模板": "套模板",
+        "运费模板": "套模板"
+      },
+      "names": [
+        "运费方式",
+        "运费"
+      ],
+      "required": true,
+      "type": "freight"
+    },
+    {
+      "key": "desc",
+      "maxLen": 5000,
+      "multiline": true,
+      "names": [
+        "描述",
+        "介绍",
+        "详情介绍",
+        "商品介绍"
+      ],
+      "required": false
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "colors",
+      "names": [
+        "色号",
+        "颜色",
+        "色"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "sizes",
+      "names": [
+        "规格",
+        "容量",
+        "净含量"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "patterns",
+      "names": [
+        "质地",
+        "版本",
+        "套装",
+        "组合",
+        "图案"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "key": "stock",
+      "names": [
+        "库存",
+        "库存数"
+      ],
+      "required": true,
+      "type": "stock"
+    },
+    {
+      "key": "code",
+      "maxLen": 80,
+      "names": [
+        "款号",
+        "货号",
+        "款式编号"
+      ],
+      "required": false
+    }
+  ],
+  "headerRow1": [
+    "商品名",
+    "分类",
+    "价格",
+    "运费方式",
+    "描述"
+  ],
+  "id": "cosmetics",
+  "images": {
+    "accept": [
+      "png",
+      "jpeg",
+      "webp"
+    ],
+    "categories": [
+      {
+        "key": "main",
+        "label": "主图",
+        "naming": "主图{index}",
+        "required": true
+      },
+      {
+        "key": "detail",
+        "label": "详情图",
+        "naming": "详情图{index}",
+        "required": false
+      },
+      {
+        "key": "color",
+        "keyFrom": "colors",
+        "label": "颜色图",
+        "naming": "颜色图-{key}",
+        "required": false
+      },
+      {
+        "key": "size",
+        "label": "尺码图",
+        "maxCount": 1,
+        "naming": "尺码图",
+        "required": false
+      }
+    ],
+    "maxImages": 12,
+    "maxPixels": 4000000
+  },
+  "limits": {
+    "maxCombos": 400,
+    "maxDescLen": 5000,
+    "maxPrice": 1000000,
+    "maxZipBytes": 2097152
+  },
+  "name": "美妆",
+  "sheetName": "商品",
+  "specAxes": [
+    "colors",
+    "sizes",
+    "patterns"
+  ],
+  "specHeaderRow": 4,
+  "specHeaders": [
+    "颜色",
+    "尺码",
+    "图案",
+    "库存"
+  ],
+  "version": "1.0.0",
+  "parserCompatible": true,
+  "targetParser": "wander-v1"
+}

@@ -1,0 +1,224 @@
+{
+  "id": "food",
+  "name": "食品",
+  "version": "1.0.0",
+  "description": "食品类商品信息表模板：口味 × 规格 × 包装三维规格，含保质期与成分扩展字段。出包为标准信息表，暂不能直接导入现有商城后台解析器。",
+  "sheetName": "商品",
+  "headerRow1": [
+    "商品名",
+    "分类",
+    "价格",
+    "运费方式",
+    "描述",
+    "保质期",
+    "成分",
+    "产地"
+  ],
+  "specHeaderRow": 4,
+  "specHeaders": [
+    "口味",
+    "规格",
+    "包装",
+    "库存"
+  ],
+  "fields": [
+    {
+      "key": "name",
+      "maxLen": 120,
+      "names": [
+        "款名",
+        "商品名",
+        "品名"
+      ],
+      "required": true,
+      "styleAnchor": true
+    },
+    {
+      "key": "category",
+      "maxLen": 120,
+      "names": [
+        "分类",
+        "类别",
+        "品类"
+      ],
+      "required": true
+    },
+    {
+      "key": "price",
+      "names": [
+        "价格",
+        "售价",
+        "单价"
+      ],
+      "required": true,
+      "type": "price"
+    },
+    {
+      "key": "freight",
+      "map": {
+        "free": "包邮",
+        "template": "套模板",
+        "免邮": "包邮",
+        "免邮费": "包邮",
+        "包邮": "包邮",
+        "套模板": "套模板",
+        "模板": "套模板",
+        "运费模板": "套模板"
+      },
+      "names": [
+        "运费方式",
+        "运费"
+      ],
+      "required": true,
+      "type": "freight"
+    },
+    {
+      "key": "desc",
+      "maxLen": 5000,
+      "multiline": true,
+      "names": [
+        "描述",
+        "介绍",
+        "详情介绍",
+        "商品介绍"
+      ],
+      "required": false
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "flavors",
+      "names": [
+        "口味",
+        "味道"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "specs",
+      "names": [
+        "规格",
+        "净含量",
+        "容量"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "packs",
+      "names": [
+        "包装",
+        "包装方式",
+        "装"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "key": "stock",
+      "names": [
+        "库存",
+        "库存数"
+      ],
+      "required": true,
+      "type": "stock"
+    },
+    {
+      "key": "code",
+      "maxLen": 80,
+      "names": [
+        "款号",
+        "货号",
+        "款式编号"
+      ],
+      "required": false
+    }
+  ],
+  "specAxes": [
+    "flavors",
+    "specs",
+    "packs"
+  ],
+  "extraFields": [
+    {
+      "key": "shelfLife",
+      "names": [
+        "保质期"
+      ],
+      "required": true,
+      "type": "text"
+    },
+    {
+      "key": "ingredients",
+      "names": [
+        "成分",
+        "配料"
+      ],
+      "required": true,
+      "type": "text"
+    },
+    {
+      "key": "origin",
+      "names": [
+        "产地"
+      ],
+      "required": false,
+      "type": "text"
+    },
+    {
+      "key": "prodDate",
+      "names": [
+        "生产日期"
+      ],
+      "required": false,
+      "type": "date"
+    }
+  ],
+  "images": {
+    "accept": [
+      "png",
+      "jpeg",
+      "webp"
+    ],
+    "categories": [
+      {
+        "key": "main",
+        "label": "主图",
+        "naming": "主图{index}",
+        "required": true
+      },
+      {
+        "key": "detail",
+        "label": "详情图",
+        "naming": "详情图{index}",
+        "required": false
+      },
+      {
+        "key": "flavor",
+        "label": "口味图",
+        "naming": "口味图-{key}",
+        "required": false,
+        "keyFrom": "flavors"
+      },
+      {
+        "key": "pack",
+        "label": "包装图",
+        "naming": "包装图",
+        "required": false,
+        "maxCount": 1
+      }
+    ],
+    "maxImages": 12,
+    "maxPixels": 4000000
+  },
+  "limits": {
+    "maxCombos": 400,
+    "maxDescLen": 5000,
+    "maxPrice": 1000000,
+    "maxZipBytes": 2097152
+  },
+  "parserCompatible": false,
+  "targetParser": "none"
+}

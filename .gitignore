@@ -1,0 +1,14 @@
+node_modules/
+dist-pwa/
+test/out/
+selling/
+pdf-work/
+shells/electron/
+shells/android/build/
+shells/android/out/
+*.keystore
+keystore.properties
+*.log
+.env*
+.DS_Store
+Thumbs.db

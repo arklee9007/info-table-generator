@@ -1,0 +1,223 @@
+{
+  "id": "home",
+  "name": "家居",
+  "version": "1.0.0",
+  "description": "家居类商品信息表模板：颜色 × 尺寸 × 材质三维规格，含适用场景与安装服务扩展字段。出包为标准信息表，暂不能直接导入现有商城后台解析器。",
+  "sheetName": "商品",
+  "headerRow1": [
+    "商品名",
+    "分类",
+    "价格",
+    "运费方式",
+    "描述",
+    "适用场景",
+    "安装服务",
+    "重量"
+  ],
+  "specHeaderRow": 4,
+  "specHeaders": [
+    "颜色",
+    "尺寸",
+    "材质",
+    "库存"
+  ],
+  "fields": [
+    {
+      "key": "name",
+      "maxLen": 120,
+      "names": [
+        "款名",
+        "商品名",
+        "品名"
+      ],
+      "required": true,
+      "styleAnchor": true
+    },
+    {
+      "key": "category",
+      "maxLen": 120,
+      "names": [
+        "分类",
+        "类别",
+        "品类"
+      ],
+      "required": true
+    },
+    {
+      "key": "price",
+      "names": [
+        "价格",
+        "售价",
+        "单价"
+      ],
+      "required": true,
+      "type": "price"
+    },
+    {
+      "key": "freight",
+      "map": {
+        "free": "包邮",
+        "template": "套模板",
+        "免邮": "包邮",
+        "免邮费": "包邮",
+        "包邮": "包邮",
+        "套模板": "套模板",
+        "模板": "套模板",
+        "运费模板": "套模板"
+      },
+      "names": [
+        "运费方式",
+        "运费"
+      ],
+      "required": true,
+      "type": "freight"
+    },
+    {
+      "key": "desc",
+      "maxLen": 5000,
+      "multiline": true,
+      "names": [
+        "描述",
+        "介绍",
+        "详情介绍",
+        "商品介绍"
+      ],
+      "required": false
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "colors",
+      "names": [
+        "颜色",
+        "配色",
+        "色"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "sizes",
+      "names": [
+        "尺寸",
+        "长宽",
+        "规格"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "itemMaxLen": 60,
+      "key": "materials",
+      "names": [
+        "材质",
+        "面料",
+        "材料"
+      ],
+      "required": true,
+      "type": "list"
+    },
+    {
+      "key": "stock",
+      "names": [
+        "库存",
+        "库存数"
+      ],
+      "required": true,
+      "type": "stock"
+    },
+    {
+      "key": "code",
+      "maxLen": 80,
+      "names": [
+        "款号",
+        "货号",
+        "款式编号"
+      ],
+      "required": false
+    }
+  ],
+  "specAxes": [
+    "colors",
+    "sizes",
+    "materials"
+  ],
+  "extraFields": [
+    {
+      "key": "scene",
+      "names": [
+        "适用场景",
+        "场景"
+      ],
+      "required": false,
+      "type": "text"
+    },
+    {
+      "key": "install",
+      "names": [
+        "安装服务",
+        "安装"
+      ],
+      "required": false,
+      "type": "enum",
+      "options": [
+        "包安装",
+        "自行安装",
+        "无需安装"
+      ]
+    },
+    {
+      "key": "weight",
+      "names": [
+        "重量"
+      ],
+      "required": false,
+      "type": "number"
+    }
+  ],
+  "images": {
+    "accept": [
+      "png",
+      "jpeg",
+      "webp"
+    ],
+    "categories": [
+      {
+        "key": "main",
+        "label": "主图",
+        "naming": "主图{index}",
+        "required": true
+      },
+      {
+        "key": "detail",
+        "label": "详情图",
+        "naming": "详情图{index}",
+        "required": false
+      },
+      {
+        "key": "color",
+        "label": "颜色图",
+        "naming": "颜色图-{key}",
+        "required": false,
+        "keyFrom": "colors"
+      },
+      {
+        "key": "size",
+        "label": "尺寸图",
+        "naming": "尺寸图",
+        "required": false,
+        "maxCount": 1
+      }
+    ],
+    "maxImages": 12,
+    "maxPixels": 4000000
+  },
+  "limits": {
+    "maxCombos": 400,
+    "maxDescLen": 5000,
+    "maxPrice": 1000000,
+    "maxZipBytes": 2097152
+  },
+  "parserCompatible": false,
+  "targetParser": "none"
+}
